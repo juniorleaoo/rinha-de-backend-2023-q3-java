@@ -34,5 +34,5 @@ jobs:
           publish_dir: ${{ github.workspace }}/rinha-de-backend-2023-q3/stress-test/user-files/results/${{ env.GATLING_OUTPUT_FOLDER }}
           destination_dir: ${{ env.GATLING_OUTPUT_FOLDER }}
       - run: echo "GH_REPO=$(echo ${{ github.repository }} | cut -d "/" -f 2)" >> $GITHUB_ENV
-      - run: echo "Deployed at [https://github.com/juniorleaoo/rinha-de-backend-2023-q3-java/${{ env.GATLING_OUTPUT_FOLDER }}](https://github.com/juniorleaoo/rinha-de-backend-2023-q3-java/${{ env.GATLING_OUTPUT_FOLDER }})" >> "${GITHUB_STEP_SUMMARY}"
+      - run: echo "Deployed at [https://juniorleaoo.github.io/rinha-de-backend-2023-q3-java/${{ env.GATLING_OUTPUT_FOLDER }}](https://juniorleaoo.github.io/rinha-de-backend-2023-q3-java/${{ env.GATLING_OUTPUT_FOLDER }})" >> "${GITHUB_STEP_SUMMARY}"
 
