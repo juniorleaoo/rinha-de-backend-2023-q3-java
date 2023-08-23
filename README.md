@@ -1,1 +1,12 @@
-IMPORTANTE: Você terá 1.5 CPUs e 3.0GB para distribuir como quiser entre seus contêineres! Os limites mostrados aqui são apenas um exemplo – use-os como quiser. Aprender a lidar com restrições é muito importante! :)
+# Javinha
+
+Github: [@juniorleaoo](https://github.com/juniorleaoo)
+
+Repositório : [juniorleaoo/rinha-de-backend-2023-q3-java](https://github.com/juniorleaoo/rinha-de-backend-2023-q3-java)
+
+# Stack
+- Java 21 (virtual threads)
+- PostgreSQL
+- Redis
+
+> Feito na correria
