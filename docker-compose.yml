@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   api1: &api
-    image: juniorleaoo/rinha-backend-java:1
+    image: juniorleaoo/rinha-backend-java:latest
     hostname: api1
     depends_on:
       - db
