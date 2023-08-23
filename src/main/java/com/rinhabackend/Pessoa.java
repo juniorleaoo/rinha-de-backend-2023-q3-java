@@ -7,7 +7,12 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,9 +55,18 @@ public class Pessoa {
     public boolean valido() {
         var apelidoValido = apelido != null && !apelido.isEmpty() && apelido.length() < 32;
         var nomeValido = nome != null && !nome.isEmpty() && nome.length() < 100;
-        var nascimentoValido = nascimento != null;
+        var nascimentoValido = nascimento != null && isValidDate(nascimento);
         var stackValida = stack != null && stack.stream().allMatch(value -> value != null && value.length() < 32);
         return apelidoValido && nomeValido && nascimentoValido && stackValida;
+    }
+
+    private boolean isValidDate(String dateAsString) {
+        try {
+            DateTimeFormatter.ofPattern("yyyy[-MM[-dd]]").parseBest(dateAsString, LocalDate::from, YearMonth::from, Year::from);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
     }
 
     public UUID getId() {

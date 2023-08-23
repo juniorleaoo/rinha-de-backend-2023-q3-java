@@ -40,7 +40,7 @@ services:
 
   db:
     image: postgres:latest
-    command: postgres -c 'synchronous_commit=off'
+    command: 'postgres  -c synchronous_commit=off -c shared_buffers=256MB -c max_connections=200'
     hostname: db
     environment:
       - POSTGRES_DB=app
@@ -53,7 +53,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.3'
+          cpus: '0.4'
           memory: '0.5GB'
 
   cache:
@@ -64,7 +64,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'
+          cpus: '0.1'
           memory: '0.25GB'
 
 networks:

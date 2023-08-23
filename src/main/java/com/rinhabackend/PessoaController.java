@@ -78,7 +78,7 @@ public class PessoaController {
 
     @GetMapping("/pessoas")
     public ResponseEntity<List<Pessoa>> findById(@RequestParam(value = "t") String t) {
-        if (t == null || t.isEmpty()) {
+        if (t == null || t.isEmpty() || t.isBlank()) {
             return ResponseEntity.badRequest().build();
         }
 
