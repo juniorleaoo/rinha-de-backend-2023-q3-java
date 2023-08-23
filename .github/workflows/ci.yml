@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: docker build -t rinha-backend-java .
-      - run: docker-compose -f docker-compose-local.yml up -d
+      - run: docker-compose -f docker-compose.yml up -d
       - name: Load test
         run: |
           git clone --single-branch --quiet https://github.com/zanfranceschi/rinha-de-backend-2023-q3
