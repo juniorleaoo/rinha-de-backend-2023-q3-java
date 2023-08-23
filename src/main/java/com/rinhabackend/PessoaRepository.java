@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface PessoaRepository extends JpaRepository<Pessoa, UUID> {
 
-    @Query(value = "SELECT * FROM pessoa p WHERE to_tsquery('english', :busca) @@ termo LIMIT 50", nativeQuery = true)
-    List<Pessoa> listarTodosPorTermo(@Param("busca") String termo);
+    @Query(value = "SELECT * FROM pessoa p WHERE apelido LIKE :termo OR nome LIKE :termo OR stack like :termo LIMIT 50", nativeQuery = true)
+    List<Pessoa> listarTodosPorTermo(@Param("termo") String termo);
 
 }

@@ -22,7 +22,7 @@ public class Pessoa {
     @Column(name = "nome", nullable = false, length = 100)
     private String nome;
     @Column(name = "nascimento", nullable = false)
-    private LocalDate nascimento;
+    private String nascimento;
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "stack", columnDefinition = "jsonb", nullable = false)
     private List<String> stack;
@@ -31,7 +31,7 @@ public class Pessoa {
 
     }
 
-    public Pessoa(UUID id, String apelido, String nome, LocalDate nascimento, List<String> stack) {
+    public Pessoa(UUID id, String apelido, String nome, String nascimento, List<String> stack) {
         this.id = id;
         this.apelido = apelido;
         this.nome = nome;
@@ -39,7 +39,7 @@ public class Pessoa {
         this.stack = stack;
     }
 
-    public Pessoa(String id, String apelido, String nome, LocalDate nascimento, List<String> stack) {
+    public Pessoa(String id, String apelido, String nome, String nascimento, List<String> stack) {
         this.id = UUID.fromString(id);
         this.apelido = apelido;
         this.nome = nome;
@@ -79,11 +79,11 @@ public class Pessoa {
         this.nome = nome;
     }
 
-    public LocalDate getNascimento() {
+    public String getNascimento() {
         return nascimento;
     }
 
-    public void setNascimento(LocalDate nascimento) {
+    public void setNascimento(String nascimento) {
         this.nascimento = nascimento;
     }
 

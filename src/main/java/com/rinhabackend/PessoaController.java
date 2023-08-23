@@ -38,7 +38,7 @@ public class PessoaController {
     }
 
     @PostMapping("/pessoas")
-    public ResponseEntity<Pessoa> incluirPessoa(@RequestBody Pessoa pessoaRequest) throws JsonProcessingException {
+    public ResponseEntity<Pessoa> incluirPessoa(@RequestBody Pessoa pessoaRequest) {
         if (!pessoaRequest.valido()) {
             return ResponseEntity.unprocessableEntity().build();
         }
@@ -77,12 +77,12 @@ public class PessoaController {
     }
 
     @GetMapping("/pessoas")
-    public ResponseEntity<List<Pessoa>> findById(@RequestParam(value = "t") String t) throws JsonProcessingException {
+    public ResponseEntity<List<Pessoa>> findById(@RequestParam(value = "t") String t) {
         if (t == null || t.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
-        var pessoas = pessoaRepository.listarTodosPorTermo(t.replaceAll(" ", "*"));
+        var pessoas = pessoaRepository.listarTodosPorTermo("%" + t + "%");
         return ResponseEntity.ok(pessoas);
     }
 
