@@ -1,1 +1,1 @@
-# rinha-de-backend-2023-q3-java
+IMPORTANTE: Você terá 1.5 CPUs e 3.0GB para distribuir como quiser entre seus contêineres! Os limites mostrados aqui são apenas um exemplo – use-os como quiser. Aprender a lidar com restrições é muito importante! :)

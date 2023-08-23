@@ -1,0 +1,36 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.0-SNAPSHOT'
+	id 'io.spring.dependency-management' version '1.1.2'
+	id 'org.hibernate.orm' version '6.2.6.Final'
+	id 'org.graalvm.buildtools.native' version '0.9.23'
+}
+
+group = 'com'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '21'
+}
+
+repositories {
+	mavenCentral()
+	gradlePluginPortal()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	runtimeOnly 'org.postgresql:postgresql'
+	implementation group: 'io.hypersistence', name: 'hypersistence-utils-hibernate-62', version: '3.5.1'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'redis.clients:jedis:4.3.2'
+//	implementation 'io.lettuce:lettuce-core:6.2.6.RELEASE'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
