@@ -38,16 +38,16 @@ public class PessoaService {
     }
 
     public Optional<Pessoa> findById(UUID id) {
-        return jdbcTemplate.query("select * from pessoa where id = ?",
+        return jdbcTemplate.query("select id, apelido, nome, nascimento, stack from pessoa where id = ?",
                 rs -> rs.next() ? Optional.ofNullable(MAPPER_PESSOA.mapRow(rs, 1)) : Optional.empty(),
                 id
         );
     }
 
     public List<Pessoa> listarTodosPorTermo(String termo) {
-        return jdbcTemplate.query("SELECT * FROM pessoa p WHERE apelido ILIKE ? OR nome ILIKE ? OR stack ILIKE ? LIMIT 50",
+        return jdbcTemplate.query("SELECT id, apelido, nome, nascimento, stack FROM pessoa p WHERE termo ILIKE '%' || ? || '%' LIMIT 50",
                 MAPPER_PESSOA,
-                termo, termo, termo);
+                termo);
     }
 
     public void inserir(Pessoa pessoa) {
