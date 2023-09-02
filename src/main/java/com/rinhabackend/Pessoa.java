@@ -1,12 +1,11 @@
 package com.rinhabackend;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Year;
@@ -14,11 +13,15 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "pessoa")
-public class Pessoa {
+public class Pessoa implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 2765821260250568277L;
 
     @Id
     private UUID id;
@@ -28,8 +31,9 @@ public class Pessoa {
     private String nome;
     @Column(name = "nascimento", nullable = false)
     private String nascimento;
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "stack", columnDefinition = "jsonb", nullable = false)
+
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "stack", columnDefinition = "text", nullable = false)
     private List<String> stack;
 
     public Pessoa() {
@@ -107,5 +111,20 @@ public class Pessoa {
 
     public void setStack(List<String> stack) {
         this.stack = stack;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Pessoa pessoa = (Pessoa) o;
+
+        return Objects.equals(id, pessoa.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

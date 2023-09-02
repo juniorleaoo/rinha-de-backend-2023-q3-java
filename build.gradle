@@ -10,7 +10,7 @@ group = 'com'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '21'
+	sourceCompatibility = '19'
 }
 
 repositories {
@@ -23,14 +23,17 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'com.hazelcast:hazelcast-all:4.2.8'
 	runtimeOnly 'org.postgresql:postgresql'
-	implementation group: 'io.hypersistence', name: 'hypersistence-utils-hibernate-62', version: '3.5.1'
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'redis.clients:jedis:4.3.2'
-//	implementation 'io.lettuce:lettuce-core:6.2.6.RELEASE'
-
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+tasks.withType(JavaCompile) {
+	options.compilerArgs += "--enable-preview"
+}
+tasks.withType(Test) {
+	jvmArgs += "--enable-preview"
+}
+tasks.withType(JavaExec) {
+	jvmArgs += "--enable-preview"
 }

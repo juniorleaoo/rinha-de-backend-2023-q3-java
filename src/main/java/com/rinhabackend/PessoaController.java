@@ -1,10 +1,7 @@
 package com.rinhabackend;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -12,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -19,13 +17,9 @@ import java.util.UUID;
 public class PessoaController {
 
     @Autowired
-    private PessoaRepository pessoaRepository;
-    @Autowired
     private PessoaService pessoaService;
     @Autowired
-    private RedisTemplate<String, String> template;
-    @Autowired
-    private ObjectMapper objectMapper;
+    private PessoaCache pessoaCache;
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     protected ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
@@ -43,37 +37,36 @@ public class PessoaController {
             return ResponseEntity.unprocessableEntity().build();
         }
 
-        var apelidoExiste = template.opsForValue().get(pessoaRequest.getApelido());
-
-        if (apelidoExiste != null) {
+        if (pessoaCache.hasApelidoCache(pessoaRequest.getApelido())) {
             return ResponseEntity.unprocessableEntity().build();
         }
 
-        var uuid = UUID.randomUUID();
-
         try {
-            pessoaRequest.setId(uuid);
+            pessoaRequest.setId(UUID.randomUUID());
             pessoaService.inserir(pessoaRequest);
-            template.opsForValue().set(pessoaRequest.getId().toString(), objectMapper.writeValueAsString(pessoaRequest));
-            template.opsForValue().set(pessoaRequest.getApelido(), ".");
+            pessoaCache.addPessoaCache(pessoaRequest);
+            pessoaCache.addApelidoCache(pessoaRequest.getApelido());
 
             return ResponseEntity.created(URI.create("/pessoas/" + pessoaRequest.getId())).body(pessoaRequest);
         } catch (DataIntegrityViolationException exception) {
-            template.opsForValue().set(pessoaRequest.getApelido(), ".");
-            return ResponseEntity.unprocessableEntity().build();
-        } catch (JsonProcessingException exception) {
+            pessoaCache.addApelidoCache(pessoaRequest.getApelido());
             return ResponseEntity.unprocessableEntity().build();
         }
     }
 
-
     @GetMapping("/pessoas/{id}")
-    public ResponseEntity<Pessoa> findById(@PathVariable UUID id) throws JsonProcessingException {
-        String pessoaString = template.opsForValue().get(id.toString());
-        if (pessoaString == null || pessoaString.isEmpty()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Pessoa> findById(@PathVariable UUID id) {
+        Pessoa pessoa = pessoaCache.getPessoaCache(id);
+        if (pessoa == null) {
+            Optional<Pessoa> pessoaOptional = pessoaService.findById(id);
+            if (pessoaOptional.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            pessoa = pessoaOptional.get();
+            pessoaCache.addPessoaCache(pessoa);
         }
-        return ResponseEntity.ok(objectMapper.readValue(pessoaString, Pessoa.class));
+        return ResponseEntity.ok(pessoa);
     }
 
     @GetMapping("/pessoas")
@@ -82,14 +75,13 @@ public class PessoaController {
             return ResponseEntity.badRequest().build();
         }
 
-        var pessoas = pessoaRepository.listarTodosPorTermo("%" + t + "%");
+        var pessoas = pessoaService.listarTodosPorTermo("%" + t + "%");
         return ResponseEntity.ok(pessoas);
     }
 
     @GetMapping("/contagem-pessoas")
     public ResponseEntity<Long> contagemPessoas() {
-        return ResponseEntity.ok(pessoaRepository.count());
+        return ResponseEntity.ok(pessoaService.count());
     }
-
 
 }

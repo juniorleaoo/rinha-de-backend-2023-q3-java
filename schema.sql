@@ -1,4 +1,9 @@
 CREATE EXTENSION btree_gin;
+
+-- for debug slow queries https://www.postgresql.org/docs/current/pgstatstatements.html
+-- CREATE EXTENSION pg_stat_statements;
+-- ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statements';
+
 create table pessoa
 (
     id         uuid primary key,
