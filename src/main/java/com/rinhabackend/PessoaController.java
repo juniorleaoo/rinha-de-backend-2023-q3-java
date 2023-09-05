@@ -75,7 +75,7 @@ public class PessoaController {
             return ResponseEntity.badRequest().build();
         }
 
-        var pessoas = pessoaService.listarTodosPorTermo(t);
+        var pessoas = pessoaService.listarTodosPorTermo("%" + t + "%");
         return ResponseEntity.ok(pessoas);
     }
 

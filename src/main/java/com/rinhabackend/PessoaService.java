@@ -45,7 +45,7 @@ public class PessoaService {
     }
 
     public List<Pessoa> listarTodosPorTermo(String termo) {
-        return jdbcTemplate.query("SELECT id, apelido, nome, nascimento, stack FROM pessoa p WHERE termo ILIKE '%' || ? || '%' LIMIT 50",
+        return jdbcTemplate.query("SELECT id, apelido, nome, nascimento, stack FROM pessoa p WHERE termo ILIKE ? LIMIT 50",
                 MAPPER_PESSOA,
                 termo);
     }

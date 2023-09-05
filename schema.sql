@@ -14,8 +14,9 @@ create table pessoa
     nome       varchar(100)       not null,
     stack      text              null,
     termo TEXT GENERATED ALWAYS AS (
-            nome || ' ' || apelido || ' ' || stack
+            nome || apelido || stack
     ) STORED
 );
 
-CREATE INDEX index_termo ON pessoa USING gin(termo gin_trgm_ops);
+-- CREATE INDEX index_termo ON pessoa USING gin(termo gin_trgm_ops);
+CREATE INDEX index_termo ON pessoa USING gist(termo gist_trgm_ops);
