@@ -1,25 +1,24 @@
 package com.rinhabackend;
 
-import com.hazelcast.core.HazelcastInstance;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Map;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 
 @Configuration
 public class CacheConfig {
 
-    public static String KEY_APELIDOS = "apelidos";
-    public static String KEY_PESSOAS = "pessoas";
+    @Value("${spring.data.redis.host}")
+    private String host;
+    @Value("${spring.data.redis.port}")
+    private Integer port;
 
     @Bean
-    public Map<String, Boolean> apelidosMap(HazelcastInstance hazelcastInstance) {
-        return hazelcastInstance.getMap(KEY_APELIDOS);
-    }
-
-    @Bean
-    public Map<String, Pessoa> pessoasMap(HazelcastInstance hazelcastInstance) {
-        return hazelcastInstance.getMap(KEY_PESSOAS);
+    public RedisConnectionFactory redisConnectionFactory() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
+        return new JedisConnectionFactory(config);
     }
 
 }

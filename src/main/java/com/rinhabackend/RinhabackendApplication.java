@@ -20,5 +20,17 @@ public class RinhabackendApplication {
         SpringApplication.run(RinhabackendApplication.class, args);
     }
 
+    @Bean
+    public TomcatProtocolHandlerCustomizer<?> protocolHandlerVirtualThreadExecutorCustomizer() {
+        return protocolHandler -> {
+            protocolHandler.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
+        };
+    }
+
+    @Bean
+    public AsyncTaskExecutor applicationTaskExecutor() {
+        return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor());
+    }
+
 }
 

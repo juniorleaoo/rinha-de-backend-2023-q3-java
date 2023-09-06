@@ -52,13 +52,10 @@ public class PessoaService {
 
     public void inserir(Pessoa pessoa) {
         pessoas.add(pessoa);
-        if (pessoas.size() >= 500) {
-            batchInsertScheduled();
-        }
     }
 
-    @Scheduled(fixedDelay = 5000)
-    private void batchInsertScheduled() {
+    @Scheduled(fixedDelay = 2000)
+    public void batchInsertScheduled() {
         final Queue<Pessoa> pessoasQueue = new ConcurrentLinkedQueue<>();
         for (int i = 0; i < pessoas.size(); i++) {
             pessoasQueue.add(pessoas.poll());
@@ -66,8 +63,8 @@ public class PessoaService {
         batchInsert(pessoasQueue);
     }
 
-    private void batchInsert(final Queue<Pessoa> pessoasQueue) {
-        if(pessoasQueue.isEmpty()) return;
+    public void batchInsert(final Queue<Pessoa> pessoasQueue) {
+        if (pessoasQueue.isEmpty()) return;
 
         jdbcTemplate.batchUpdate("insert into pessoa (id, apelido, nome, nascimento, stack) values(?,?,?,?,?)", new BatchPreparedStatementSetter() {
             public void setValues(PreparedStatement ps, int i) throws SQLException {

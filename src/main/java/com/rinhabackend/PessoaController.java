@@ -47,7 +47,7 @@ public class PessoaController {
             pessoaCache.addPessoaCache(pessoaRequest);
             pessoaCache.addApelidoCache(pessoaRequest.getApelido());
 
-            return ResponseEntity.created(URI.create("/pessoas/" + pessoaRequest.getId())).body(pessoaRequest);
+            return ResponseEntity.created(URI.create("/pessoas/" + pessoaRequest.getId())).build();
         } catch (DataIntegrityViolationException exception) {
             pessoaCache.addApelidoCache(pessoaRequest.getApelido());
             return ResponseEntity.unprocessableEntity().build();

@@ -8,17 +8,21 @@ services:
     hostname: api1
     depends_on:
       - db
+      - cache
     expose:
       - "8080"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/app
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=123456
+      - SPRING_DATA_REDIS_HOST=cache
+    networks:
+      - rinha
     deploy:
       resources:
         limits:
-          cpus: '0.3'
-          memory: '1GB'
+          cpus: '0.45'
+          memory: '0.7GB'
 
   api2:
     <<: *api
@@ -33,6 +37,8 @@ services:
       - api2
     ports:
       - "9999:9999"
+    networks:
+      - rinha
     deploy:
       resources:
         limits:
@@ -41,7 +47,7 @@ services:
 
   db:
     image: postgres:latest
-    command: 'postgres  -c synchronous_commit=off -c shared_buffers=256MB -c max_connections=250'
+    command: 'postgres -c synchronous_commit=off -c shared_buffers=640MB -c max_connections=330 -c effective_cache_size=1GB -c maintenance_work_mem=384MB'
     hostname: db
     environment:
       - POSTGRES_DB=app
@@ -51,12 +57,28 @@ services:
       - "5432:5432"
     volumes:
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - rinha
     deploy:
       resources:
         limits:
-          cpus: '0.8'
-          memory: '0.8GB'
+          cpus: '0.5'
+          memory: '1.2GB'
+
+  cache:
+    hostname: cache
+    image: redis/redis-stack-server:latest
+    command: redis-server --save "" --appendonly no --protected-mode no
+    ports:
+      - '6379:6379'
+    networks:
+      - rinha
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: '0.2GB'
 
 networks:
-  default:
+  rinha:
     driver: bridge

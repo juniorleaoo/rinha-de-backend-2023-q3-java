@@ -24,8 +24,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
-	implementation 'com.hazelcast:hazelcast-all:4.2.8'
 	runtimeOnly 'org.postgresql:postgresql'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'redis.clients:jedis:4.3.2'
 }
 
 tasks.withType(JavaCompile) {
